@@ -124,7 +124,7 @@ const DiscountList: React.FC = () => {
                                 ? `${discount.value} %`
                                 : `€ ${discount.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} {discount.period}
                         </div>
-                        {discount.isManualAdd && discount.editable ? (
+                        {discount.isManualAdd ? (
                             <div className="flex gap-2">
                                 <button
                                     className="text-[#26B7CD] p-1"
@@ -145,7 +145,7 @@ const DiscountList: React.FC = () => {
                                 className={`w-[70px] h-[35px] flex items-center cursor-pointer transition-colors duration-300 ${discount.isActive ? 'bg-[#30bbd9]' : 'bg-gray-300'}`}
                             >
                                 <div
-                                    className={`w-6 h-6 bg-white transition-all duration-300 transform ${discount.isActive ? 'translate-x-[34px]' : 'translate-x-[4px]'}`}
+                                    className={`w-7 h-7 bg-white transition-all duration-300 transform ${discount.isActive ? 'translate-x-[38px]' : 'translate-x-[4px]'}`}
                                 ></div>
                             </div>
                         )}

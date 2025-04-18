@@ -114,12 +114,11 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                             onClick={() => setPriceType('one-time')}
                         >
                             <span>One time price</span>
-                            <div className="w-4 h-4 rounded-full border-2 border-gray-400 ml-3 flex items-center justify-center bg-white">
-                                {priceType === 'one-time' && (
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-[#30bbd9]" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                )}
+                            <div className="m-2">
+                                {priceType === 'one-time' ?
+                                    <img src="/icons/tick_fill.svg" alt="Edit" width={20} height={20} />
+                                    : <img src="/icons/round_fill.svg" alt="Edit" width={20} height={20} />
+                                }
                             </div>
                         </button>
                         <button
@@ -130,12 +129,11 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                             onClick={() => { !discountToEdit ? setPriceType('monthly') : '' }}
                         >
                             <span>Monthly price</span>
-                            <div className="w-4 h-4 rounded-full border-2 border-gray-400 ml-3 flex items-center justify-center bg-white">
-                                {priceType === 'monthly' && (
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-[#30bbd9]" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                )}
+                            <div className="m-2">
+                                {priceType === 'monthly' ?
+                                    <img src="/icons/tick_fill.svg" alt="Edit" width={20} height={20} />
+                                    : <img src="/icons/round_fill.svg" alt="Edit" width={20} height={20} />
+                                }
                             </div>
                         </button>
                     </div>

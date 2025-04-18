@@ -14,7 +14,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ onConfirm, onCa
                     onClick={onCancel}
                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-lg font-bold"
                 >
-                    <img src="/icons/cross_close.svg" alt="Edit" width={15} height={15} />
+                    <img src="/icons/cross_close.svg" alt="Edit" width={12} height={12} />
                 </button>
 
                 <div className="mb-4">
