@@ -9,6 +9,7 @@ interface AddDiscountModalProps {
         duration: string;
         newPrice: string;
         description: string;
+        isManualAdd: boolean;
     }) => void;
     basePrice?: number;
 }
@@ -61,7 +62,8 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
             value: discountValue,
             duration,
             newPrice,
-            description
+            description,
+            isManualAdd: true
         });
         onClose();
     };
