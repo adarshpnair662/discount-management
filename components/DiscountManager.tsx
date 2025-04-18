@@ -3,6 +3,7 @@ import DiscountList from './DiscountList';
 import ProductOverview from './ProductOverview';
 import NavigationTabs from './NavigationTabs';
 import NavigationButtons from './NavigationButtons';
+import { DiscountProvider } from '../context/DiscountContext'
 
 const DiscountManager: React.FC = () => {
     return (
@@ -12,7 +13,6 @@ const DiscountManager: React.FC = () => {
                     Previous
                 </button>
             </div>
-
             <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-2/3">
                     <div className="bg-[#30bbd9] text-white p-4 font-medium">
@@ -28,7 +28,6 @@ const DiscountManager: React.FC = () => {
                     <ProductOverview />
                 </div>
             </div>
-
             <NavigationTabs />
         </div>
     );

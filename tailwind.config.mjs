@@ -6,11 +6,12 @@ export default {
     ],
     theme: {
       extend: {
+        fontFamily: {
+          lato: ['var(--font-lato)', 'sans-serif'],
+        },
         colors: {
           primary: '#30bbd9',
-          blue: {
-            50: '#EFF6FF',
-          }
+          secondary:  '#EDF6FB',
         },
       },
     },

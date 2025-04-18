@@ -1,28 +1,11 @@
 import React, { useState } from 'react';
 import AddDiscountModal from './AddDiscountModal';
-
-type DiscountType = {
-    name: string;
-    value: string;
-    type: 'fixed' | 'percentage';
-    period: 'one time' | 'monthly' | 'monthly first 3 months' | any;
-    editable?: boolean;
-    isActive: boolean;
-    isManualAdd?: boolean;
-};
+import { useDiscount } from '@/context/DiscountContext';
+import { DiscountType } from '../types/discount';
 
 const DiscountList: React.FC = () => {
     const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
-    const [discounts, setDiscounts] = useState<DiscountType[]>([
-        { name: 'Discount name', value: '€ 250,00', type: 'fixed', period: 'one time', isActive: true },
-        { name: 'Discount name', value: '5 %', type: 'percentage', period: 'one time', editable: true, isActive: true },
-        { name: 'Discount name', value: '€ 250,00', type: 'fixed', period: 'monthly', isActive: true },
-        { name: 'Discount name', value: '25 %', type: 'percentage', period: 'monthly first 3 months', isActive: false },
-        { name: 'Discount name', value: '€ 250,00', type: 'fixed', period: 'one time', isActive: true },
-        { name: 'Discount name', value: '€ 50,00', type: 'fixed', period: 'monthly first 3 months', editable: true, isActive: false },
-        { name: 'Discount name', value: '25 %', type: 'percentage', period: 'one time', isActive: false },
-        { name: 'Discount name', value: '25 %', type: 'percentage', period: 'monthly', isActive: true, isManualAdd: true },
-    ]);
+    const { discounts, setDiscounts } = useDiscount();
 
     const toggleSwitch = (index: number) => {
         const updated = [...discounts];
@@ -33,9 +16,7 @@ const DiscountList: React.FC = () => {
     const handleAddDiscount = (discountData: any) => {
         const newDiscount: DiscountType = {
             name: discountData.description || 'Discount name',
-            value: discountData.discountType === 'percentage'
-                ? `${discountData.value} %`
-                : `€ ${discountData.value}`,
+            value: discountData.value,
             type: discountData.discountType === 'percentage' ? 'percentage' : 'fixed',
             period: discountData.type === 'one-time'
                 ? 'one time'
@@ -76,7 +57,9 @@ const DiscountList: React.FC = () => {
                                 <img src="/icons/penchil_edit.svg" alt="Edit" width={15} height={15} />
                             </button>
                         )}
-                        <div className="text-gray-700">- {discount.value} {discount.period}</div>
+                        <div className="text-gray-700">- {discount.type === 'percentage'
+                            ? `${discount.value} %`
+                            : `€ ${discount.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} {discount.period}</div>
                         {discount.isManualAdd && discount.editable ?
                             <div>
                                 <button className="text-[#26B7CD] p-1">
