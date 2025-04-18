@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 interface AddDiscountModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -12,13 +13,21 @@ interface AddDiscountModalProps {
         isManualAdd: boolean;
     }) => void;
     basePrice?: number;
+    discountToEdit?: {
+        type: 'one-time' | 'monthly';
+        discountType: 'percentage' | 'fixed';
+        value: string;
+        duration: string;
+        description: string;
+    } | null;
 }
 
 const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
     isOpen,
     onClose,
     onSave,
-    basePrice = 1000.00
+    basePrice = 1000.00,
+    discountToEdit = null
 }) => {
     const [priceType, setPriceType] = useState<'one-time' | 'monthly'>('monthly');
     const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
@@ -44,14 +53,33 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
 
     useEffect(() => {
         if (isOpen) {
-            setPriceType('monthly');
-            setDiscountType('percentage');
-            setDiscountValue('');
-            setDuration('');
-            setNewPrice(`€ ${basePrice.toFixed(2).replace('.', ',')}`);
-            setDescription('');
+            if (discountToEdit) {
+                setPriceType(discountToEdit.type);
+                setDiscountType(discountToEdit.discountType);
+                setDiscountValue(discountToEdit.value);
+                setDuration(discountToEdit.duration);
+                setDescription(discountToEdit.description);
+
+                const value = parseFloat(discountToEdit.value);
+                let calculatedPrice = basePrice;
+
+                if (!isNaN(value)) {
+                    calculatedPrice = discountToEdit.discountType === 'percentage'
+                        ? basePrice * (1 - value / 100)
+                        : basePrice - value;
+                }
+
+                setNewPrice(`€ ${calculatedPrice.toFixed(2).replace('.', ',')}`);
+            } else {
+                setPriceType('monthly');
+                setDiscountType('percentage');
+                setDiscountValue('');
+                setDuration('');
+                setNewPrice(`€ ${basePrice.toFixed(2).replace('.', ',')}`);
+                setDescription('');
+            }
         }
-    }, [isOpen, basePrice]);
+    }, [isOpen, basePrice, discountToEdit]);
 
     if (!isOpen) return null;
 
@@ -71,7 +99,9 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
             <div className="bg-white rounded-lg w-[764px] h-auto p-4 overflow-y-auto">
-                <h2 className="text-xl font-medium mb-4">Add discount</h2>
+                <h2 className="text-xl font-medium mb-4">
+                    {discountToEdit ? 'Edit Discount' : 'Add Discount'}
+                </h2>
 
                 <div className="mb-4">
                     <p className="mb-1 text-sm">For which price do you calculate the discount?</p>
@@ -97,7 +127,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                                 ? 'bg-[#30bbd9] text-white'
                                 : 'bg-gray-100 text-gray-500'
                                 }`}
-                            onClick={() => setPriceType('monthly')}
+                            onClick={() => { !discountToEdit ? setPriceType('monthly') : '' }}
                         >
                             <span>Monthly price</span>
                             <div className="w-4 h-4 rounded-full border-2 border-gray-400 ml-3 flex items-center justify-center bg-white">
@@ -139,7 +169,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                     </div>
                 </div>
 
-                {priceType === 'monthly' && (
+                {priceType === 'monthly' && !discountToEdit && (
                     <div className="mb-4">
                         <label className="block text-sm mb-1">Duration</label>
                         <div className="relative">
@@ -167,7 +197,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                     />
                 </div>
 
-                <div className="mb-4">
+                {!discountToEdit && <div className="mb-4">
                     <label className="block text-sm mb-1">Description</label>
                     <input
                         type="text"
@@ -177,7 +207,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                         placeholder=""
                     />
                 </div>
-
+                }
                 <div className="flex justify-between">
                     <button
                         className="px-4 py-1.5 text-sm text-[#30bbd9] hover:underline"
@@ -189,12 +219,11 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                         className="px-4 py-1.5 text-sm bg-[#30bbd9] text-white rounded-md hover:bg-[#1fa0b5]"
                         onClick={handleSave}
                     >
-                        Add
+                        {discountToEdit ? 'Update' : 'Add'}
                     </button>
                 </div>
             </div>
         </div>
-
     );
 };
 
