@@ -1,16 +1,17 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import AddDiscountModal from './AddDiscountModal';
 
 type DiscountType = {
     name: string;
     value: string;
     type: 'fixed' | 'percentage';
-    period: 'one time' | 'monthly' | 'monthly first 3 months';
+    period: 'one time' | 'monthly' | 'monthly first 3 months' | any;
     editable?: boolean;
     isActive: boolean;
 };
 
 const DiscountList: React.FC = () => {
+    const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
     const [discounts, setDiscounts] = useState<DiscountType[]>([
         { name: 'Discount name', value: '€ 250,00', type: 'fixed', period: 'one time', isActive: true },
         { name: 'Discount name', value: '5 %', type: 'percentage', period: 'one time', editable: true, isActive: true },
@@ -28,10 +29,32 @@ const DiscountList: React.FC = () => {
         setDiscounts(updated);
     };
 
+    const handleAddDiscount = (discountData: any) => {
+        const newDiscount: DiscountType = {
+            name: discountData.description || 'Discount name',
+            value: discountData.discountType === 'percentage'
+                ? `${discountData.value} %`
+                : `€ ${discountData.value}`,
+            type: discountData.discountType === 'percentage' ? 'percentage' : 'fixed',
+            period: discountData.type === 'one-time'
+                ? 'one time'
+                : discountData.duration
+                    ? `monthly first ${discountData.duration} months`
+                    : 'monthly',
+            isActive: true,
+            editable: true
+        };
+
+        setDiscounts([...discounts, newDiscount]);
+    };
+
     return (
         <div className="bg-white border border-gray-200">
             <div className="p-4 flex justify-center">
-                <button className="text-primary flex items-center">
+                <button
+                    className="text-primary flex items-center"
+                    onClick={() => setIsAddDiscountModalOpen(true)}
+                >
                     <span className="mr-2">+</span>
                     Add manual discount
                 </button>
@@ -61,6 +84,13 @@ const DiscountList: React.FC = () => {
                     </div>
                 </div>
             ))}
+
+            <AddDiscountModal
+                isOpen={isAddDiscountModalOpen}
+                onClose={() => setIsAddDiscountModalOpen(false)}
+                onSave={handleAddDiscount}
+                basePrice={1000.00}
+            />
         </div>
     );
 }
